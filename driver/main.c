@@ -1,4 +1,5 @@
 #include "../ParseArgs.h"
+#include "../Generate.h"
 
 /**
 * Joshua Pyle, Biological Inspired Computation.
@@ -19,6 +20,26 @@ int main(int argc,char** argv){
 	Settings settings;
 	setDefault(&settings);
 	parseArguments(&settings,argv,argc);
+	
+	//Does the user just want to generate test files?
+	if(wasArgSpecified(argv,argc,"--problem1")){
+		seedRandom();
+		//Generate the different sets..
+		generateFileProb1("problem1_training.txt",200,-2,2);
+		generateFileProb1("problem1_testing.txt",100,-2,2);
+		generateFileProb1("problem1_validation.txt",50,-2,2);
+		return 0;
+	}
+
+	if(wasArgSpecified(argv,argc,"--problem2")){
+		seedRandom();
+		generateFileProb2("problem2_training.txt",200,-2,2);
+		generateFileProb2("problem2_testing.txt",100,-2,2);
+		generateFileProb2("problem2_validation.txt",50,-2,2);
+		return 0;
+	}
+	
+	//Show the user what was selecte.
 	displaySettings(&settings);
 
 

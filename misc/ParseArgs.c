@@ -19,6 +19,7 @@ void setDefault(Settings* settings){
 	settings->validationFile = (char*)"validation1.txt";	
 	settings->numEpochs = 10;
 	settings->numInputs = 2;
+	settings->numOutputs=1;
 }
 
 /**
@@ -85,6 +86,7 @@ void displayHelp(){
 	printf("--learningRate [float] The learning rate\n");
 	printf("--numEpochs [num] The number of epochs\n");	
 	printf("--numInputs [num] The number of inputs \n");	
+	printf("--numOutputs [num] The number of outputs \n ");
 	printf("--trainingFile [file] The training file \n");
 	printf("--testingFile [file] The testing file \n");
 	printf("--validationFile [file] The validation file\n");
@@ -125,6 +127,12 @@ void parseArguments(Settings* settings,char** args,int numArg){
 	if(value!=0){
 			settings->learningRate = atof(value);
 	}
+
+	value = getValueSpecified(args,numArg,(char*)"--numOutputs");
+	if(value!=0){
+			settings->numOutputs = atof(value);
+	}
+
 	
 	//Assuming it has been allocated as the default.
 	value = getValueSpecified(args,numArg,(char*)"--hiddenLayers");
@@ -143,6 +151,10 @@ void parseArguments(Settings* settings,char** args,int numArg){
 		}
 		int count = 0;
 		while(firstValue){
+			if(count>settings->numHiddenLayers){
+				printf("Numbers of hidden layers do not match specification\n");
+				return;
+			}
 			settings->numNeurons[count] = atoi(firstValue);	
 			firstValue = strtok(0,",");
 			count++; 

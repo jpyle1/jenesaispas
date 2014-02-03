@@ -49,7 +49,12 @@ typedef struct argStruct{
 	/**
 	* Holds the number of inputs to the network.
 	*/	
-	int numInputs;	
+	int numInputs;
+
+	/**
+	* Holds the number of output nodes.
+	*/		
+	int numOutputs;
 }Settings;
 
 /**
