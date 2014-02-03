@@ -1,10 +1,61 @@
 #include "../Neural.h"
-#include "../Generate.h"
-#include <stdio.h>
 
 /**
 * Joshua Pyle, Biological Inspired computation.
 */
+
+/**
+* Creates a neural network based on the settings.
+*/
+NeuralNetwork* initializeNeuralNetwork(Settings* settings){
+
+	NeuralNetwork* neuralNetwork = (NeuralNetwork*)malloc(sizeof(NeuralNetwork));
+	Layer** layers = (Layer**)malloc(sizeof(Layer*)*settings->numHiddenLayers+1);	
+	
+	neuralNetwork->numInputs = settings->numInputs;
+	neuralNetwork->numOutputs = settings->numOutputs; 
+
+	//Initialize the first hidden layer.
+	int i = 0;
+	Layer* prevLayer = initializeLayer(settings->numNeurons[i],
+		settings->numInputs,0,0);
+	layers[i] = prevLayer;
+	Layer* currentLayer = 0; 
+
+	//Initialize the other hidden layers.
+	for(i=1;i<settings->numHiddenLayers;i++){
+		currentLayer = initializeLayer(settings->numNeurons[i],
+			prevLayer->numNeurons,prevLayer,0);
+		layers[i] = currentLayer;
+		prevLayer->nextLayer = currentLayer;
+		prevLayer = currentLayer;	
+	}
+
+	//Finally, initialize the output layer.	
+	Layer* outputLayer = initializeLayer(settings->numOutputs,
+		prevLayer->numNeurons,prevLayer,0);	
+	
+	layers[i] = outputLayer;
+	
+	neuralNetwork->layers= layers;
+
+	return neuralNetwork;
+}
+
+/**
+* Displays a neural network.
+*/
+void displayNeuralNetwork(NeuralNetwork* neuralNetwork){
+
+
+}
+
+/**
+* Frees a neural network.
+*/
+void freeNeuralNetwork(NeuralNetwork* neuralNetwork);
+
+
 
 /**
 * Responsible for initializing a layer.

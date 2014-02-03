@@ -18,7 +18,7 @@ bin/Generate.o: misc/Generate.c Generate.h
 	gcc -c misc/Generate.c
 	mv Generate.o bin/
 
-bin/Neural.o: neural/Neural.c Neural.h
+bin/Neural.o: neural/Neural.c Neural.h misc/Generate.c Generate.h ParseArgs.h misc/ParseArgs.c
 	gcc -c neural/Neural.c
 	mv Neural.o bin/	
 

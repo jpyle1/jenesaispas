@@ -1,3 +1,6 @@
+#include "Generate.h"
+#include "ParseArgs.h"
+
 /**
 * Joshua Pyle, Biological Inspired Computation.
 */ 
@@ -65,6 +68,48 @@ typedef struct nodeLayer{
 	struct nodeLayer* nextLayer;
 
 } Layer;
+
+/**
+* Holds a neural network.
+*/
+typedef struct network{
+	
+	/**
+	* Holds the number of inputs.
+	*/
+	int numInputs;
+
+	/**
+	* Holds the number of outputs.
+	*/
+	int numOutputs;
+
+	/**
+	* Holds the number of hidden layers.
+	*/
+	int numHiddenLayers;
+
+	/**
+	* Holds the layers.
+	*/
+	Layer** layers;
+	
+} NeuralNetwork;
+
+/**
+* Creates a neural network based on the settings.
+*/
+NeuralNetwork* initializeNeuralNetwork(Settings* settings);
+
+/**
+* Displays a neural network.
+*/
+void displayNeuralNetwork(NeuralNetwork* neuralNetwork);
+
+/**
+* Frees a neural network.
+*/
+void freeNeuralNetwork(NeuralNetwork* neuralNetwork);
 
 /**
 * Responsible for initializing a layer.
