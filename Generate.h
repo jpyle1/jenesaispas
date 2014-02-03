@@ -15,7 +15,7 @@ void seedRandom();
 * Generate a random float.
 * Assume 6 decimal spots.
 */
-float generateRandomFloat(int min,int max);
+float generateRandomFloat(int min,int max,int multFact,float divFact);
 
 /**
 * Generate a file for problem 1..
