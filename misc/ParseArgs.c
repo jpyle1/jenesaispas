@@ -42,6 +42,7 @@ void displaySettings(Settings* settings){
 	printf("LearningRate: %.3f\n",settings->learningRate);
 	printf("NumEpochs: %i\n",settings->numEpochs);
 	printf("NumInputs: %i\n",settings->numInputs);
+	printf("NumOutputs: %i\n",settings->numOutputs);
 	printf("Training File: %s \n",settings->trainingFile);
 	printf("Testing File: %s \n",settings->testingFile);
 	printf("Validation File: %s\n",settings->validationFile);

@@ -14,6 +14,7 @@ NeuralNetwork* initializeNeuralNetwork(Settings* settings){
 	
 	neuralNetwork->numInputs = settings->numInputs;
 	neuralNetwork->numOutputs = settings->numOutputs; 
+	neuralNetwork->numLayers = settings->numHiddenLayers+1;
 
 	//Initialize the first hidden layer.
 	int i = 0;
@@ -46,14 +47,28 @@ NeuralNetwork* initializeNeuralNetwork(Settings* settings){
 * Displays a neural network.
 */
 void displayNeuralNetwork(NeuralNetwork* neuralNetwork){
-
-
+	printf("Displaying neural network\n\n");	
+	printf("Num Inputs:%i\n",neuralNetwork->numInputs);
+	printf("Num Outputs%i\n",neuralNetwork->numOutputs);
+	printf("Num Layers%i\n",neuralNetwork->numLayers);
+	int i = 0;
+	for(;i<neuralNetwork->numLayers;i++){
+		printf("\n======\n");
+		displayLayer(neuralNetwork->layers[i]);
+		printf("\n======\n");
+	}				
+	printf("Done displaying neuralnetwork \n\n");
 }
 
 /**
 * Frees a neural network.
 */
-void freeNeuralNetwork(NeuralNetwork* neuralNetwork);
+void freeNeuralNetwork(NeuralNetwork* neuralNetwork){
+	int i = 0;	
+	for(;i<neuralNetwork->numLayers;i++){
+		freeLayer(neuralNetwork->layers[i]);
+	}	
+}
 
 
 
@@ -70,7 +85,7 @@ Layer* initializeLayer(int numNeurons,int numWeightsPerNode,
 	layer->prevLayer = prevLayer;
 	layer->nextLayer = nextLayer;
 
-	float** weights = (float**)malloc(sizeof(float*)*numWeightsPerNode);
+	float** weights = (float**)malloc(sizeof(float*)*numNeurons);
 	Neuron** neurons = (Neuron**)malloc(sizeof(Neuron*)*numNeurons);
 	
 	int i = 0;
@@ -121,13 +136,15 @@ void freeLayer(Layer* layer){
 	for(;i<layer->numNeurons;i++){
 		free(layer->neurons[i]);
 	}
-	free(layer->neurons);	
+	free(layer->neurons);
+		
 	i = 0;
+
 	for(;i<layer->numNeurons;i++){
 		free(layer->weights[i]);
 	}	
 	free(layer->weights);
-	free(layer);	
+	free(layer);		
 }
 
 

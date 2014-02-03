@@ -87,7 +87,7 @@ typedef struct network{
 	/**
 	* Holds the number of hidden layers.
 	*/
-	int numHiddenLayers;
+	int numLayers;
 
 	/**
 	* Holds the layers.

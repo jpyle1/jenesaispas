@@ -1,5 +1,3 @@
-#include "../ParseArgs.h"
-#include "../Generate.h"
 #include "../Neural.h"
 
 /**
@@ -43,9 +41,17 @@ int main(int argc,char** argv){
 	//Show the user what was selected.
 	displaySettings(&settings);
 
+	
+	NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
+	displayNeuralNetwork(neuralNetwork);		
+	freeNeuralNetwork(neuralNetwork);
+	
+	
+	/*
 	Layer* layer = initializeLayer(10,10,0,0);
 	displayLayer(layer);
 	freeLayer(layer);
+	*/
 	//printf("%.6f\n",generateRandomFloat(-1,1,1000000,10000000.0f));
 	//displayNeuron(initializeNeuron());
 	

@@ -55,7 +55,7 @@ typedef struct argStruct{
 	* Holds the number of output nodes.
 	*/		
 	int numOutputs;
-}Settings;
+} Settings;
 
 /**
 * Initializes the Setting's structure with the default values.
