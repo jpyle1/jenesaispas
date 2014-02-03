@@ -15,15 +15,15 @@ void seedRandom();
 * Generate a random float.
 * Assume 6 decimal spots.
 */
-float generateRandomFloat(int min,int max,int multFact,float divFact);
+float generateRandomFloat(float min,float max);
 
 /**
 * Generate a file for problem 1..
 */
-void generateFileProb1(char* fileName,int numRecords,int min,int max);
+void generateFileProb1(char* fileName,int numRecords,float min,float max);
 
 /**
 * Generate a file for problem 2..
 */
-void generateFileProb2(char* fileName,int numRecords,int min,int max);
+void generateFileProb2(char* fileName,int numRecords,float min,float max);
 

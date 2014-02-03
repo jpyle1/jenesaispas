@@ -15,29 +15,36 @@ NeuralNetwork* initializeNeuralNetwork(Settings* settings){
 	neuralNetwork->numInputs = settings->numInputs;
 	neuralNetwork->numOutputs = settings->numOutputs; 
 	neuralNetwork->numLayers = settings->numHiddenLayers+1;
-
-	//Initialize the first hidden layer.
+	
+	Layer* prevLayer = 0;
+	Layer* currentLayer = 0;
 	int i = 0;
-	Layer* prevLayer = initializeLayer(settings->numNeurons[i],
-		settings->numInputs,0,0);
-	layers[i] = prevLayer;
-	Layer* currentLayer = 0; 
-
-	//Initialize the other hidden layers.
-	for(i=1;i<settings->numHiddenLayers;i++){
-		currentLayer = initializeLayer(settings->numNeurons[i],
-			prevLayer->numNeurons,prevLayer,0);
-		layers[i] = currentLayer;
-		prevLayer->nextLayer = currentLayer;
-		prevLayer = currentLayer;	
+	for(;i<neuralNetwork->numLayers;i++){
+		if(i == 0){
+			//If there is one or more hidden layers.
+			if(neuralNetwork->numLayers-1!=0){	
+				prevLayer = initializeLayer(settings->numNeurons[i],
+					settings->numInputs,0,0);
+			}
+			//if there are no hidden layers.
+			else{
+				prevLayer = initializeLayer(settings->numOutputs,
+					settings->numInputs,0,0); 
+			}	
+			layers[i] = prevLayer;
+		}else if(i==neuralNetwork->numLayers-1){
+			currentLayer = initializeLayer(settings->numOutputs,
+				prevLayer->numNeurons,prevLayer,0);
+			layers[i] = currentLayer;
+		}else{
+			currentLayer = initializeLayer(settings->numNeurons[i],
+				prevLayer->numNeurons,prevLayer,0);	
+			layers[i] = currentLayer;	
+			prevLayer->nextLayer = currentLayer;
+			prevLayer = currentLayer;
+		}		
 	}
 
-	//Finally, initialize the output layer.	
-	Layer* outputLayer = initializeLayer(settings->numOutputs,
-		prevLayer->numNeurons,prevLayer,0);	
-	
-	layers[i] = outputLayer;
-	
 	neuralNetwork->layers= layers;
 
 	return neuralNetwork;
@@ -99,7 +106,7 @@ Layer* initializeLayer(int numNeurons,int numWeightsPerNode,
 		int x = 0;
 		float* currentWeights = (float*)malloc(sizeof(float)*numWeightsPerNode);	
 		for(;x<numWeightsPerNode;x++){
-			currentWeights[x] = generateRandomFloat(-1,1,1000000,10000000.0f); 
+			currentWeights[x] = generateRandomFloat(-.1f,.1f); 
 		}
 		weights[i] = currentWeights;
 	}
@@ -157,7 +164,7 @@ Neuron* initializeNeuron(){
 	neuron->sigma = 0.0f;
 	neuron->delta = 0.0f;
 	neuron->h = 0.0f;
-	neuron->biasWeight = generateRandomFloat(-1,1,1000000,10000000.0f); 
+	neuron->biasWeight = generateRandomFloat(-.1,.1); 
 	return neuron;	
 }
 

@@ -1,4 +1,4 @@
-#include "../Neural.h"
+#include "../Train.h"
 
 /**
 * Joshua Pyle, Biological Inspired Computation.
