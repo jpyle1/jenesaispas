@@ -36,6 +36,7 @@ NeuralNetwork* initializeNeuralNetwork(Settings* settings){
 			currentLayer = initializeLayer(settings->numOutputs,
 				prevLayer->numNeurons,prevLayer,0);
 			layers[i] = currentLayer;
+			prevLayer->nextLayer = currentLayer;
 		}else{
 			currentLayer = initializeLayer(settings->numNeurons[i],
 				prevLayer->numNeurons,prevLayer,0);	

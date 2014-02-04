@@ -47,7 +47,7 @@ void computeOutputs(NeuralNetwork* neuralNetwork,float* inputs){
 			//Add the bias weight.
 			currentNeuron->h+=currentNeuron->biasWeight;
 			//Compute the sigma for this node.	
-			currentNeuron->sigma = computeSigma(currentNeuron->sigma);
+			currentNeuron->sigma = computeSigma(currentNeuron->h);
 		}
 		currentLayer=currentLayer->nextLayer;
 	}		
