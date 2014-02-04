@@ -49,6 +49,7 @@ int main(int argc,char** argv){
 	inputs[0] = 1.0f;
 	inputs[1] = 2.0f;
 	computeOutputs(neuralNetwork,(float*)inputs);
+	computeDeltas(neuralNetwork,.2f);
 	displayNeuralNetwork(neuralNetwork);	
 	freeNeuralNetwork(neuralNetwork);
 	

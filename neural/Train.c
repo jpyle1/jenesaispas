@@ -52,3 +52,39 @@ void computeOutputs(NeuralNetwork* neuralNetwork,float* inputs){
 		currentLayer=currentLayer->nextLayer;
 	}		
 }
+
+/**
+* Responsible for updating the delta values.
+*/
+void computeDeltas(NeuralNetwork* neuralNetwork,float output){
+	//Retrieve the output layer.
+	Layer* outputLayer = neuralNetwork->layers[neuralNetwork->numLayers-1];
+	
+	//For each node in the output layer.
+	int i = 0;
+	for(;i<outputLayer->numNeurons;i++){
+		Neuron* currentNeuron = outputLayer->neurons[i];
+		currentNeuron->delta = currentNeuron->sigma*(1-currentNeuron->sigma)*
+			(output-currentNeuron->sigma); 
+	}
+	//Get the previous layer.
+	Layer* currentLayer = outputLayer->prevLayer;
+	while(currentLayer){
+		Layer* nextLayer = currentLayer->nextLayer;	
+		int x = 0;
+		//Iterate through the number of nodes in this layer.	
+		for(;x<currentLayer->numNeurons;x++){
+			//Get the current neuron.
+			Neuron* currentNeuron = currentLayer->neurons[x];
+			//Iterate through all the nodes in the next layer.
+			int y = 0;
+			for(;y<nextLayer->numNeurons;y++){
+				currentNeuron->delta += currentNeuron->sigma*(1-currentNeuron->sigma)*
+					nextLayer->neurons[y]->delta*nextLayer->weights[y][x];	
+			}		
+		}
+		currentLayer = currentLayer->prevLayer;
+	}
+		
+
+}
