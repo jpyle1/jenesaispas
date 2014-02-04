@@ -43,7 +43,13 @@ int main(int argc,char** argv){
 
 	
 	NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
-	displayNeuralNetwork(neuralNetwork);		
+	displayNeuralNetwork(neuralNetwork);	
+	
+	float inputs [2];
+	inputs[0] = 1.0f;
+	inputs[1] = 2.0f;
+	computeOutputs(neuralNetwork,(float*)inputs);
+	displayNeuralNetwork(neuralNetwork);	
 	freeNeuralNetwork(neuralNetwork);
 	
 	
