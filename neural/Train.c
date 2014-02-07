@@ -94,7 +94,74 @@ void computeDeltas(NeuralNetwork* neuralNetwork,float output){
 */
 void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
 	float learningRate){
+	//Get the first layer
+	Layer* inputLayer = neuralNetwork->layers[0];
 
-	
+	//Update the weights of the first layer.
+	int i = 0;
+	for(;i<inputLayer->numNeurons;i++){
+		Neuron* currentNeuron = inputLayer->neurons[i];
+		int x = 0;	
+		for(;x<neuralNetwork->numInputs;x++){	
+			inputLayer->weights[i][x]+=learningRate*currentNeuron->delta*inputs[x];	
+		}
+		currentNeuron->biasWeight = learningRate*currentNeuron->delta;
+	}	
 
+	//For each other layer...
+	Layer* currentLayer = inputLayer->nextLayer;
+	while(currentLayer){
+		Layer* prevLayer = currentLayer->prevLayer;
+		//For each node in the current layer..
+		for(i=0;i<currentLayer->numNeurons;i++){		
+			Neuron* currentNeuron = currentLayer->neurons[i];
+			int x = 0;	
+			for(;x<currentLayer->numWeightsPerNode;x++){
+				currentLayer->weights[i][x]+=learningRate*
+					prevLayer->neurons[x]->sigma*currentNeuron->delta;
+			}
+			currentNeuron->biasWeight = learningRate*currentNeuron->delta;
+		}	
+		currentLayer=currentLayer->nextLayer;
+	}		
 }
+
+/**
+* Returns the file loaded into a buffer.
+*/
+char* getFile(char* fileName){
+	//Firstly, fetch the contents of the file.
+	FILE* currentFile = fopen(fileName,"r");
+	//Get the file size...
+	fseek(currentFile,0L,SEEK_END);
+	int size = ftell(currentFile);
+	fseek(currentFile,0L,SEEK_SET);
+	char* file = (char*)malloc(sizeof(char)*size);
+	fread(file,size*sizeof(char),size,currentFile);
+	fclose(currentFile);
+	return file;			
+}
+
+/**
+* Trains the network based on a filename.
+*/
+void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate, 
+	char* fileName){
+	//Get the current file.
+	char* file = getFile(fileName);
+	//Get the number of columns in the file.
+	int numColumns = neuralNetwork->numInputs+1;
+
+	int currentColumn = 0;	
+	char* value = strtok(file,", \n");
+	while(value!=NULL){
+		if(currentColumn%3==0){
+				
+			printf("\n");
+		}	
+		printf("%.6f,",atof(value));	
+		currentColumn++;	
+		value=strtok(0,", \n");
+	}				
+}
+

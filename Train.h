@@ -25,3 +25,12 @@ void computeDeltas(NeuralNetwork* neuralNetwork,float output);
 */
 void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
 	float learningRate);
+
+/**
+* Trains the network based on a filename.
+*/
+void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate, 
+	char* fileName);
+
+
+

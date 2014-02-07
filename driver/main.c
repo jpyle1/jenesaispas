@@ -44,25 +44,18 @@ int main(int argc,char** argv){
 	
 	NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
 	displayNeuralNetwork(neuralNetwork);	
-	
+	printf("\n\n");
 	float inputs [2];
 	inputs[0] = 1.0f;
 	inputs[1] = 2.0f;
 	computeOutputs(neuralNetwork,(float*)inputs);
 	computeDeltas(neuralNetwork,.2f);
-	displayNeuralNetwork(neuralNetwork);	
-	freeNeuralNetwork(neuralNetwork);
-	
-	
-	/*
-	Layer* layer = initializeLayer(10,10,0,0);
-	displayLayer(layer);
-	freeLayer(layer);
-	*/
-	//printf("%.6f\n",generateRandomFloat(-1,1,1000000,10000000.0f));
-	//displayNeuron(initializeNeuron());
-	
+	updateWeights(neuralNetwork,(float*)inputs,.2f);
+	displayNeuralNetwork(neuralNetwork);
 
+	trainNetwork(neuralNetwork,.2f,settings.trainingFile);
+
+	freeNeuralNetwork(neuralNetwork);
 	freeNumNeurons(&settings);
 	return 0;	
 }
