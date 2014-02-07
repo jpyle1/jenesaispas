@@ -19,3 +19,9 @@ void computeOutputs(NeuralNetwork* neuralNetwork,float* inputs);
 * Responsible for updating the delta values.
 */
 void computeDeltas(NeuralNetwork* neuralNetwork,float output);
+
+/**
+* Responsible for updating the weights.
+*/
+void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
+	float learningRate);

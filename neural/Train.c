@@ -88,3 +88,13 @@ void computeDeltas(NeuralNetwork* neuralNetwork,float output){
 		
 
 }
+
+/**
+* Responsible for updating the weights.
+*/
+void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
+	float learningRate){
+
+	
+
+}
