@@ -32,5 +32,17 @@ void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
 void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate, 
 	char* fileName);
 
+/**
+* Tests the network based on a filename.
+*/
+void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber,char* fileName);
 
+/**
+* Responsible for validating the network.
+*/ 
+void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName);
 
+/**
+* Resets the values of the neurons.
+*/
+void resetValues(NeuralNetwork* neuralNetwork);

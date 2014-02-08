@@ -43,17 +43,14 @@ int main(int argc,char** argv){
 
 	
 	NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
-	displayNeuralNetwork(neuralNetwork);	
-	printf("\n\n");
-	float inputs [2];
-	inputs[0] = 1.0f;
-	inputs[1] = 2.0f;
-	computeOutputs(neuralNetwork,(float*)inputs);
-	computeDeltas(neuralNetwork,.2f);
-	updateWeights(neuralNetwork,(float*)inputs,.2f);
-	displayNeuralNetwork(neuralNetwork);
+	int i = 0;
+	for(;i<settings.numEpochs;i++){
+		trainNetwork(neuralNetwork,.2f,settings.trainingFile);
+		testNetwork(neuralNetwork,i,settings.testingFile);
+	}
+	validateNetwork(neuralNetwork,settings.validationFile);
 
-	trainNetwork(neuralNetwork,.2f,settings.trainingFile);
+
 
 	freeNeuralNetwork(neuralNetwork);
 	freeNumNeurons(&settings);

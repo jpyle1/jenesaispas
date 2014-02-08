@@ -1,4 +1,4 @@
-#include "../Neural.h"
+#include "../Train.h"
 
 /**
 * Computes the sigma value for a specified node.
@@ -27,7 +27,7 @@ void computeOutputs(NeuralNetwork* neuralNetwork,float* inputs){
 		//Add the bias weight.
 		currentNeuron->h+=currentNeuron->biasWeight;
 		//Compute the sigma for each input node.
-		currentNeuron->sigma = computeSigma(currentNeuron->h);		
+		currentNeuron->sigma = computeSigma(currentNeuron->h);	
 	}
 
 	//Iterate through each of the hidden layers
@@ -105,7 +105,7 @@ void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
 		for(;x<neuralNetwork->numInputs;x++){	
 			inputLayer->weights[i][x]+=learningRate*currentNeuron->delta*inputs[x];	
 		}
-		currentNeuron->biasWeight = learningRate*currentNeuron->delta;
+		currentNeuron->biasWeight += learningRate*currentNeuron->delta;
 	}	
 
 	//For each other layer...
@@ -120,7 +120,7 @@ void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
 				currentLayer->weights[i][x]+=learningRate*
 					prevLayer->neurons[x]->sigma*currentNeuron->delta;
 			}
-			currentNeuron->biasWeight = learningRate*currentNeuron->delta;
+			currentNeuron->biasWeight+= learningRate*currentNeuron->delta;
 		}	
 		currentLayer=currentLayer->nextLayer;
 	}		
@@ -149,19 +149,133 @@ void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate,
 	char* fileName){
 	//Get the current file.
 	char* file = getFile(fileName);
+	if(!file){
+		printf("Could not load the file, could not train the network \n");
+		return;
+	}
 	//Get the number of columns in the file.
 	int numColumns = neuralNetwork->numInputs+1;
-
+	
+	float* currentRow = (float*)malloc(sizeof(float)*neuralNetwork->numInputs);
 	int currentColumn = 0;	
 	char* value = strtok(file,", \n");
 	while(value!=NULL){
-		if(currentColumn%3==0){
-				
-			printf("\n");
-		}	
-		printf("%.6f,",atof(value));	
-		currentColumn++;	
+		if(currentColumn==numColumns-1){
+			//Train the record now that all inputs have been received..
+			computeOutputs(neuralNetwork,currentRow);
+			computeDeltas(neuralNetwork,atof(value));
+			updateWeights(neuralNetwork,currentRow,learningRate);
+			resetValues(neuralNetwork);	
+			currentColumn = 0;	
+		}else{
+			currentRow[currentColumn] = atof(value);
+			currentColumn++;	
+		}
 		value=strtok(0,", \n");
-	}				
+	}
+	free(currentRow);
+	return;				
 }
 
+/**
+* Tests the network based on a filename.
+*/
+void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber, char* fileName){
+
+	//Get the current file.
+	char* file = getFile(fileName);
+	if(!file){
+		printf("Could not load the file, could not test the network \n");
+		return;
+	}
+	//Get the number of columns in the file.
+	int numColumns = neuralNetwork->numInputs+1;
+
+	//Get the output layer
+	Layer* outputLayer = neuralNetwork->layers[neuralNetwork->numLayers-1];	
+
+	float sum = 0.0f;//Holds the sum value of the error.	
+	float* currentRow = (float*)malloc(sizeof(float)*neuralNetwork->numInputs);
+	int currentColumn = 0;
+	int numTestingPatterns = 0; 	
+	char* value = strtok(file,", \n");
+	while(value!=NULL){
+		if(currentColumn==numColumns-1){
+			computeOutputs(neuralNetwork,currentRow);
+			float outputSigma = outputLayer->neurons[0]->sigma;
+			float outputValue = atof(value);
+			sum+=(outputValue-outputSigma)*(outputValue-outputSigma);
+			resetValues(neuralNetwork);
+			numTestingPatterns++;	
+			currentColumn = 0;	
+		}else{
+			currentRow[currentColumn] = atof(value);	
+			currentColumn++;	
+		}
+		value=strtok(0,", \n");
+	}
+	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
+	printf("%i,%.6f\n",epochNumber,rms);
+	free(currentRow);
+	return;				
+}
+
+
+/**
+* Responsible for validating the network.
+*/ 
+void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName){
+	//Get the current file.
+	char* file = getFile(fileName);
+	if(!file){
+		printf("Could not load the file, could not test the network \n");
+		return;
+	}
+	//Get the number of columns in the file.
+	int numColumns = neuralNetwork->numInputs+1;
+
+	//Get the output layer
+	Layer* outputLayer = neuralNetwork->layers[neuralNetwork->numLayers-1];	
+
+	float sum = 0.0f;//Holds the sum value of the error.	
+	float* currentRow = (float*)malloc(sizeof(float)*neuralNetwork->numInputs);
+	int currentColumn = 0;
+	int numTestingPatterns = 0; 	
+	char* value = strtok(file,", \n");
+	while(value!=NULL){
+		if(currentColumn==numColumns-1){
+			computeOutputs(neuralNetwork,currentRow);
+			float outputSigma = outputLayer->neurons[0]->sigma;
+			float outputValue = atof(value);
+			sum+=(outputValue-outputSigma)*(outputValue-outputSigma);
+			resetValues(neuralNetwork);
+			numTestingPatterns++;	
+			currentColumn = 0;	
+		}else{
+			currentRow[currentColumn] = atof(value);	
+			currentColumn++;	
+		}
+		value=strtok(0,", \n");
+	}
+	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
+	printf("Validated error: %.6f \n",rms);
+	free(currentRow);	
+}
+
+/**
+* Resets the values of the neurons.
+*/
+void resetValues(NeuralNetwork* neuralNetwork){
+	//Get the currentLayer.
+	Layer* currentLayer = neuralNetwork->layers[0];
+	while(currentLayer){
+		int i = 0;
+		for(;i<currentLayer->numNeurons;i++){
+			Neuron* currentNeuron = currentLayer->neurons[i];
+			currentNeuron->h = 0.0f;
+			currentNeuron->sigma = 0.0f;
+			currentNeuron->delta = 0.0f;	
+		}	
+		currentLayer=currentLayer->nextLayer;
+	}	
+}
