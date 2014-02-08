@@ -260,7 +260,7 @@ void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName,
 		value=strtok(0,", \n");
 	}
 	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
-	fprintf(fileOutput,"Validated error: %.6f \n",rms);
+	fprintf(fileOutput,"%.6f \n",rms);
 	free(currentRow);	
 }
 
