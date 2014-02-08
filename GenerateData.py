@@ -25,18 +25,18 @@ def main(argv):
 					currentNumNeurons+=str(random.randint(1,6))+","
 				else:
 					currentNumNeurons+=str(random.randint(1,6))		
-		#Regenerate the data...		
-		subprocess.call(["bin/main.exe","--"+problemNumber])	
-		#Perform the data..	
-		subprocess.call(["bin/main.exe","--learningRate",str(learningRate),
-			"--hiddenLayers",str(hiddenLayerCount),"--numNeurons",
-				str(currentNumNeurons),"--numEpochs",str(50000),"--numInputs",
-				str(numInputs),"--trainingFile",trainingFile,"--testingFile",
-				testingFile,"--validationFile",validationFile,"--testOutputFile",
-				"report/"+problemNumber+"/test/"+str(runNumber)+"_"+
-				str(hiddenLayerCount)+".txt","--validationOutputFile",
-				"report/"+problemNumber+"/val/"+str(runNumber)+"_"+
-				str(hiddenLayerCount)+".txt"])
+			#Regenerate the data...		
+			subprocess.call(["bin/main.exe","--"+problemNumber])	
+			#Perform the data..	
+			subprocess.call(["bin/main.exe","--learningRate",str(learningRate),
+				"--hiddenLayers",str(hiddenLayerCount),"--numNeurons",
+					str(currentNumNeurons),"--numEpochs",str(50000),"--numInputs",
+					str(numInputs),"--trainingFile",trainingFile,"--testingFile",
+					testingFile,"--validationFile",validationFile,"--testOutputFile",
+					"report/"+problemNumber+"/test/"+str(runNumber)+"_"+
+					str(hiddenLayerCount)+".txt","--validationOutputFile",
+					"report/"+problemNumber+"/val/"+str(runNumber)+"_"+
+					str(hiddenLayerCount)+".txt"])
 
 if __name__ == "__main__":
 	main(sys.argv[1:len(sys.argv)])
