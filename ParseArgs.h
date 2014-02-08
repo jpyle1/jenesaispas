@@ -55,6 +55,17 @@ typedef struct argStruct{
 	* Holds the number of output nodes.
 	*/		
 	int numOutputs;
+
+	/**
+	* Where to store the test output.
+	*/
+	char* testOutputFile;
+
+	/**
+	* Where to store the validation output.
+	*/
+	char* validationOutputFile;
+
 } Settings;
 
 /**

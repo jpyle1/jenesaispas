@@ -44,11 +44,16 @@ int main(int argc,char** argv){
 	
 	NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
 	int i = 0;
+	FILE* currentFile = fopen(settings.testOutputFile,"w+");
 	for(;i<settings.numEpochs;i++){
 		trainNetwork(neuralNetwork,.2f,settings.trainingFile);
-		testNetwork(neuralNetwork,i,settings.testingFile);
+		testNetwork(neuralNetwork,i,settings.testingFile,currentFile);
 	}
-	validateNetwork(neuralNetwork,settings.validationFile);
+	fclose(currentFile);
+	
+	currentFile = fopen(settings.validationOutputFile,"w+");
+	validateNetwork(neuralNetwork,settings.validationFile,currentFile);
+	fclose(currentFile);
 
 
 

@@ -35,12 +35,14 @@ void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate,
 /**
 * Tests the network based on a filename.
 */
-void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber,char* fileName);
+void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber,char* fileName,
+	FILE* fileOutput);
 
 /**
 * Responsible for validating the network.
 */ 
-void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName);
+void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName,
+	FILE* fileOutput);
 
 /**
 * Resets the values of the neurons.

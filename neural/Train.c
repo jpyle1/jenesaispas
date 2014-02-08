@@ -180,7 +180,8 @@ void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate,
 /**
 * Tests the network based on a filename.
 */
-void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber, char* fileName){
+void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber, char* fileName,
+	FILE* fileOutput){
 
 	//Get the current file.
 	char* file = getFile(fileName);
@@ -215,7 +216,7 @@ void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber, char* fileName){
 		value=strtok(0,", \n");
 	}
 	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
-	printf("%i,%.6f\n",epochNumber,rms);
+	fprintf(fileOutput,"%i,%.6f\n",epochNumber,rms);
 	free(currentRow);
 	return;				
 }
@@ -224,7 +225,8 @@ void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber, char* fileName){
 /**
 * Responsible for validating the network.
 */ 
-void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName){
+void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName,
+	FILE* fileOutput){
 	//Get the current file.
 	char* file = getFile(fileName);
 	if(!file){
@@ -258,7 +260,7 @@ void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName){
 		value=strtok(0,", \n");
 	}
 	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
-	printf("Validated error: %.6f \n",rms);
+	fprintf(fileOutput,"Validated error: %.6f \n",rms);
 	free(currentRow);	
 }
 

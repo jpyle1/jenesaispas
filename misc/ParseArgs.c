@@ -20,6 +20,8 @@ void setDefault(Settings* settings){
 	settings->numEpochs = 10;
 	settings->numInputs = 2;
 	settings->numOutputs=1;
+	settings->testOutputFile="out.txt";
+	settings->validationOutputFile="val.txt";
 }
 
 /**
@@ -46,6 +48,9 @@ void displaySettings(Settings* settings){
 	printf("Training File: %s \n",settings->trainingFile);
 	printf("Testing File: %s \n",settings->testingFile);
 	printf("Validation File: %s\n",settings->validationFile);
+	printf("Testing Output File: %s\n",settings->testOutputFile);
+	printf("Validation Output File: %s\n",
+		settings->validationOutputFile);
 	printf("=========\n");
 }
 
@@ -91,6 +96,8 @@ void displayHelp(){
 	printf("--trainingFile [file] The training file \n");
 	printf("--testingFile [file] The testing file \n");
 	printf("--validationFile [file] The validation file\n");
+	printf("--testOutputFile [file] The output file \n");
+	printf("--validationOutputFile [file] The val file \n");
 }
 
 
@@ -102,6 +109,17 @@ void parseArguments(Settings* settings,char** args,int numArg){
 	char* value = getValueSpecified(args,numArg,(char*)"--validationFile");
 	if(value!=0){
 		settings->validationFile = value;
+	}
+
+	value = getValueSpecified(args,numArg,(char*)"--testOutputFile");
+	if(value){
+		settings->testOutputFile = value;
+	}
+	
+	value = getValueSpecified(args,numArg,
+		(char*)"--validationOutputFile");
+	if(value){
+		settings->validationOutputFile= value;
 	}
 
 	value = getValueSpecified(args,numArg,(char*)"--testingFile");
