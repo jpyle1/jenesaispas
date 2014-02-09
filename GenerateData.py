@@ -30,7 +30,7 @@ def main(argv):
 			#Perform the data..	
 			subprocess.call(["bin/main.exe","--learningRate",str(learningRate),
 				"--hiddenLayers",str(hiddenLayerCount),"--numNeurons",
-					str(currentNumNeurons),"--numEpochs",str(50000),"--numInputs",
+					str(currentNumNeurons),"--numEpochs",str(5000),"--numInputs",
 					str(numInputs),"--trainingFile",trainingFile,"--testingFile",
 					testingFile,"--validationFile",validationFile,"--testOutputFile",
 					"report/"+problemNumber+"/test/"+str(runNumber)+"_"+

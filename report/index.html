@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script src="index.js"></script>		
+		<link href="index.css" rel="stylesheet"/>
+	</head>
+	<body>
+		<div class="base">
+			<h2>Problem 1 Stats</h2>
+			<label for="#problem1Rate">Learning Rate: </label>
+			<input type="text" id="problem1Rate" >
+			<br>
+			<label for="#problem1Layer" >Hidden Layers: </label>
+			<input type="text" id="problem1Layer">
+			<br>
+			<br>	
+			<div id="problem1SliderLearningRate"></div>
+			<br>
+			<div id="problem1SliderHiddenLayer"></div>	
+			<br>
+			<div id="problem1Stats"></div>			
+		</div>
+	</body>
+	<script>
+
+		var p1LearningRate=1;
+		var p1HiddenLayers=1;
+		var p2LearningRate=1;
+		var p2HiddenLayers=1;
+
+		width = parseInt(d3.select(".base").style("width"),10);
+		height = .4*width;	
+	
+		problem1Graph = LineGraph();
+		problem1Graph
+			.width(width)
+			.height(height);
+
+		problem1LearningRate = init();
+		problem1LearningRate
+			.updateId("#problem1Rate")		
+			.offset(.05)	
+			.problemNumber("problem1")			
+			.graph(problem1Graph)	
+			.svg("#problem1Stats");
+
+		problem1HiddenLayer = init();
+		problem1HiddenLayer
+			.updateId("#problem1Layer")
+			.problemNumber("problem1")
+			.graph(problem1Graph)
+			.svg("#problem1Stats");
+			
+		problem1LearningRate.call(undefined,$("#problem1SliderLearningRate"));
+		problem1HiddenLayer.call(undefined,$("#problem1SliderHiddenLayer"));			
+			
+	</script>
+</html>
