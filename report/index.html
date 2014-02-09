@@ -48,14 +48,16 @@
 			.offset(.05)	
 			.problemNumber("problem1")			
 			.graph(problem1Graph)	
-			.svg("#problem1Stats");
+			.svg("#problem1Stats")
+			.max(9);
 
 		problem1HiddenLayer = init();
 		problem1HiddenLayer
 			.updateId("#problem1Layer")
 			.problemNumber("problem1")
 			.graph(problem1Graph)
-			.svg("#problem1Stats");
+			.svg("#problem1Stats")	
+			.max(9);
 			
 		problem1LearningRate.call(undefined,$("#problem1SliderLearningRate"));
 		problem1HiddenLayer.call(undefined,$("#problem1SliderHiddenLayer"));			

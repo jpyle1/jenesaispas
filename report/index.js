@@ -27,6 +27,11 @@ function init(){
 	* Holds the chart svg.
 	*/
 	var svg;
+
+	/**
+	* Holds the max value.
+	*/
+	var max=10;
 			
 	/**
 	* Entry point...
@@ -35,7 +40,7 @@ function init(){
 		$(function(){
 			selection.slider({
 				min:1,
-				max:9,
+				max:max,
 				values:[1],	
 				step:1,				
 				stop: function(event,ui){
@@ -60,7 +65,9 @@ function init(){
 								console.log("Could not load the data");
 								return;
 							}
-							console.log(data);	
+						d3.select(svg)
+							.datum(data)
+							.call(graph);
 					});	
 				}
 			});
@@ -115,6 +122,15 @@ function init(){
 		return start;
 	}
 
+	/**
+	* Getter/Setter for the max.
+	*/
+	start.max = function(_){
+		if(!arguments.length) return max;
+		max = _;
+		return start;
+	}
+
 	return start;
 }
 
@@ -123,15 +139,61 @@ function LineGraph(){
 	var width;
 	var height;
 	var svg;
-	var margins={marginTop:10,marginBottom:10,marginLeft:10,marginRight:10};
+	var margins={marginTop:30,marginBottom:30,marginLeft:100,marginRight:30};
+	var xScale = d3.scale.linear();
+	var yScale = d3.scale.linear();
+	var xAxis = d3.svg.axis();
+	var yAxis = d3.svg.axis();
 
 	chart = function(selection){
-		selection.each(function(data){	
+		selection.each(function(data){
+			drawingHeight = height - margins.marginTop - margins.marginBottom;	
+			drawingWidth = width - margins.marginLeft - margins.marginRight;
+			console.log("here");	
+			xScale.domain([0,5000]);
+			xScale.range([margins.marginLeft,drawingWidth]);
+			range = d3.extent(data,function(d){
+				return d.RMSE;	
+			});
+			yScale.range([drawingHeight,margins.marginTop]);
+			yScale.domain([0,.33]);
+			xAxis.scale(xScale)	
+				.orient("bottom");
+			yAxis.scale(yScale)	
+				.orient("left");
+			line = d3.svg.line()
+				.x(function(d){return xScale(d.epochNumber);})
+				.y(function(d){return yScale(d.RMSE);});
+							
 			if(!svg){
-				drawingHeight = height - margins.marginTop - margins.marginBottom;	
-				drawingWidth = width - margins.marginLeft - margins.marginRight;
-				console.log(data);							
-			}else{
+				svg = d3.select(this).append("svg")
+					.attr("width",width)
+					.attr("height",height)
+					.attr("transform","translate("+margins.marginLeft+","+
+						margins.marginTop+")");	
+
+				svg.append("path")
+					.datum(data)
+					.attr("class","line")
+					.attr("d",line);
+
+				svg.append("g")
+					.attr("class","x axis")
+					.attr("transform","translate(0,"+drawingHeight+")")
+					.call(xAxis);	
+				
+				svg.append("g")
+					.attr("class","y axis")
+					.attr("transform","translate("+margins.marginLeft+",0)")	
+					.call(yAxis);	
+
+			}else{		
+				svg.selectAll(".line")
+					.datum(data)
+					.transition()
+					.duration(500)
+					.attr("class","line")
+					.attr("d",line);	
 
 			}
 		});

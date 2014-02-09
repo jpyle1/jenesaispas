@@ -18,6 +18,11 @@ void seedRandom();
 float generateRandomFloat(float min,float max);
 
 /**
+* Generates a random integer.
+*/
+int generateRandomInteger(int min,int max);
+
+/**
 * Generate a file for problem 1..
 */
 void generateFileProb1(char* fileName,int numRecords,float min,float max);

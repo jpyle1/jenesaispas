@@ -37,6 +37,14 @@ int main(int argc,char** argv){
 		generateFileProb2("problem2_validation.txt",50,-2,2);
 		return 0;
 	}
+
+	if(wasArgSpecified(argv,argc,"--problem3")){
+		settings.numInputs = 400;
+		settings.numOutputs = 10;
+		settings.learningRate =0.7f;
+		settings.numEpochs=10000;				
+		return 0;		
+	}
 	
 	//Show the user what was selected.
 	displaySettings(&settings);
