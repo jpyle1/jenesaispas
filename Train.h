@@ -18,7 +18,7 @@ void computeOutputs(NeuralNetwork* neuralNetwork,float* inputs);
 /**
 * Responsible for updating the delta values.
 */
-void computeDeltas(NeuralNetwork* neuralNetwork,float output);
+void computeDeltas(NeuralNetwork* neuralNetwork,float* output);
 
 /**
 * Responsible for updating the weights.
@@ -31,6 +31,12 @@ void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
 */
 void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate, 
 	char* fileName);
+
+/**
+* Trains the network based on handwritten recognition.
+*/
+void trainNetworkHand(NeuralNetwork* neuralNetwork,float learningRate,
+	char* digits,char* labels);
 
 /**
 * Tests the network based on a filename.

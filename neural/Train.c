@@ -56,7 +56,7 @@ void computeOutputs(NeuralNetwork* neuralNetwork,float* inputs){
 /**
 * Responsible for updating the delta values.
 */
-void computeDeltas(NeuralNetwork* neuralNetwork,float output){
+void computeDeltas(NeuralNetwork* neuralNetwork,float* output){
 	//Retrieve the output layer.
 	Layer* outputLayer = neuralNetwork->layers[neuralNetwork->numLayers-1];
 	
@@ -65,7 +65,7 @@ void computeDeltas(NeuralNetwork* neuralNetwork,float output){
 	for(;i<outputLayer->numNeurons;i++){
 		Neuron* currentNeuron = outputLayer->neurons[i];
 		currentNeuron->delta = currentNeuron->sigma*(1-currentNeuron->sigma)*
-			(output-currentNeuron->sigma); 
+			(output[i]-currentNeuron->sigma); 
 	}
 	//Get the previous layer.
 	Layer* currentLayer = outputLayer->prevLayer;
@@ -132,6 +132,8 @@ void updateWeights(NeuralNetwork* neuralNetwork,float* inputs,
 char* getFile(char* fileName){
 	//Firstly, fetch the contents of the file.
 	FILE* currentFile = fopen(fileName,"r");
+	if(!currentFile)
+		return 0;
 	//Get the file size...
 	fseek(currentFile,0L,SEEK_END);
 	int size = ftell(currentFile);
@@ -140,6 +142,84 @@ char* getFile(char* fileName){
 	fread(file,size*sizeof(char),size,currentFile);
 	fclose(currentFile);
 	return file;			
+}
+
+/**
+* Trains the network based on handwritten recognition.
+*/
+void trainNetworkHand(NeuralNetwork* neuralNetwork,float learningRate,
+	char* digits,char* labels){
+		
+	//Firstly, parse the labels into an integer array.
+	float floatLabels [5000];
+	
+	char* labelData = getFile(labels);		
+			
+	if(!labelData){
+		printf("Could not load the file, could not train the network \n");
+		return;
+	}						
+	
+	char* value = strtok(labelData,"\n");
+	int index = 0;
+	while(value){
+		float floatValue = atof(value);
+		if(floatValue-10.0f==0)
+			floatLabels[index]=0.0f;
+		else
+			floatLabels[index]=floatValue;
+		index++;
+		value=strtok(0,"\n");
+	}
+
+	//Get the current inputs now..		
+	char* digitData = getFile(digits);		
+			
+	if(!digitData){
+		printf("Could not load the file, could not train the network \n");
+		return;
+	}						
+
+	float currentRow[400];
+	int currentColumn = 0;
+	int rowNumber = 0;
+	value = strtok(digitData,",\n");	
+	while(value){
+		if(currentColumn==399){	
+			currentRow[currentColumn]=atof(value);
+			//Skip every 10th row.
+			if(rowNumber%10==0){
+				currentColumn=0;
+				value = strtok(0,",\n");
+				rowNumber++;	
+				continue;
+			}
+	
+			computeOutputs(neuralNetwork,currentRow);
+			float outputValues [10];			
+			int x = 0;		
+			for(;x<10;x++){
+				if(((int)floatLabels[rowNumber])==x){
+					floatLabels[rowNumber]=1.0f;
+				}else{
+					floatLabels[rowNumber]=0.0f;
+				}
+			}		
+			computeDeltas(neuralNetwork,outputValues);
+			updateWeights(neuralNetwork,currentRow,learningRate);
+			resetValues(neuralNetwork);
+			currentColumn=0;
+			rowNumber++;
+			value = strtok(0,",\n");
+			continue;
+		}	
+		currentRow[currentColumn]=atof(value);	
+		currentColumn++;
+		value = strtok(0,",\n");	
+
+	}
+	
+	return;
 }
 
 /**
@@ -163,7 +243,9 @@ void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate,
 		if(currentColumn==numColumns-1){
 			//Train the record now that all inputs have been received..
 			computeOutputs(neuralNetwork,currentRow);
-			computeDeltas(neuralNetwork,atof(value));
+			float output [1];
+			output[0] = atof(value);
+			computeDeltas(neuralNetwork,(float*)output);
 			updateWeights(neuralNetwork,currentRow,learningRate);
 			resetValues(neuralNetwork);	
 			currentColumn = 0;	
