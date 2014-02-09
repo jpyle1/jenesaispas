@@ -45,6 +45,7 @@ int main(int argc,char** argv){
 	NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
 	int i = 0;
 	FILE* currentFile = fopen(settings.testOutputFile,"w+");
+	fprintf(currentFile,"epochNumber,RMSE\n");
 	for(;i<settings.numEpochs;i++){
 		trainNetwork(neuralNetwork,.2f,settings.trainingFile);
 		testNetwork(neuralNetwork,i,settings.testingFile,currentFile);
@@ -52,6 +53,7 @@ int main(int argc,char** argv){
 	fclose(currentFile);
 	
 	currentFile = fopen(settings.validationOutputFile,"w+");
+	fprintf(currentFile,"RMSE_VALIDATED\n");
 	validateNetwork(neuralNetwork,settings.validationFile,currentFile);
 	fclose(currentFile);
 

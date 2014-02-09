@@ -216,7 +216,7 @@ void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber, char* fileName,
 		value=strtok(0,", \n");
 	}
 	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
-	fprintf(fileOutput,"%i,%.6f\n",epochNumber,rms);
+	fprintf(fileOutput,"%i,%.3f\n",epochNumber,rms);
 	free(currentRow);
 	return;				
 }
@@ -260,7 +260,7 @@ void validateNetwork(NeuralNetwork* neuralNetwork,char* fileName,
 		value=strtok(0,", \n");
 	}
 	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
-	fprintf(fileOutput,"%.6f \n",rms);
+	fprintf(fileOutput,"%.3f \n",rms);
 	free(currentRow);	
 }
 
