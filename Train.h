@@ -39,6 +39,12 @@ void trainNetworkHand(NeuralNetwork* neuralNetwork,float learningRate,
 	char* digits,char* labels);
 
 /**
+* Tests the networ based on handwritten recognition.
+*/
+void testNetworkHand(NeuralNetwork* neuralNetwork,int epochNumber,
+	char* digits,char* labels,FILE* output,FILE* confusion);
+
+/**
 * Tests the network based on a filename.
 */
 void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber,char* fileName,

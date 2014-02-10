@@ -8,9 +8,9 @@ def main(argv):
 	numInputs = argv[1];	
 
 	problemNumber = "problem"+problemNumberStr
-	trainingFile = "problem"+problemNumberStr+"_training.txt"
-	testingFile = "problem"+problemNumberStr+"_testing.txt"
-	validationFile = "problem"+problemNumberStr+"_validation.txt" 
+	trainingFile = "problem"+problemNumberStr+"_training.csv"
+	testingFile = "problem"+problemNumberStr+"_testing.csv"
+	validationFile = "problem"+problemNumberStr+"_validation.csv" 
 	
 	#Repeat the experiment several times...			
 	#With different learning rates...	
@@ -34,9 +34,9 @@ def main(argv):
 					str(numInputs),"--trainingFile",trainingFile,"--testingFile",
 					testingFile,"--validationFile",validationFile,"--testOutputFile",
 					"report/"+problemNumber+"/test/"+str(runNumber)+"_"+
-					str(hiddenLayerCount)+".txt","--validationOutputFile",
+					str(hiddenLayerCount)+".csv","--validationOutputFile",
 					"report/"+problemNumber+"/val/"+str(runNumber)+"_"+
-					str(hiddenLayerCount)+".txt"])
+					str(hiddenLayerCount)+".csv"])
 
 if __name__ == "__main__":
 	main(sys.argv[1:len(sys.argv)])

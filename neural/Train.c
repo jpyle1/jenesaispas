@@ -195,16 +195,16 @@ void trainNetworkHand(NeuralNetwork* neuralNetwork,float learningRate,
 				continue;
 			}
 	
-			computeOutputs(neuralNetwork,currentRow);
 			float outputValues [10];			
 			int x = 0;		
 			for(;x<10;x++){
 				if(((int)floatLabels[rowNumber])==x){
-					floatLabels[rowNumber]=1.0f;
+					outputValues[x]=1.0f;
 				}else{
-					floatLabels[rowNumber]=0.0f;
+					outputValues[x]=0.0f;
 				}
-			}		
+			}
+			computeOutputs(neuralNetwork,currentRow);			
 			computeDeltas(neuralNetwork,outputValues);
 			updateWeights(neuralNetwork,currentRow,learningRate);
 			resetValues(neuralNetwork);
@@ -212,7 +212,7 @@ void trainNetworkHand(NeuralNetwork* neuralNetwork,float learningRate,
 			rowNumber++;
 			value = strtok(0,",\n");
 			continue;
-		}	
+		}
 		currentRow[currentColumn]=atof(value);	
 		currentColumn++;
 		value = strtok(0,",\n");	
@@ -258,6 +258,123 @@ void trainNetwork(NeuralNetwork* neuralNetwork,float learningRate,
 	free(currentRow);
 	return;				
 }
+
+
+/**
+* Tests the networ based on handwritten recognition.
+*/
+void testNetworkHand(NeuralNetwork* neuralNetwork,int epochNumber,
+	char* digits,char* labels,FILE* output,FILE* confusion){
+
+	//Firstly, parse the labels into an integer array.
+	float floatLabels [5000];
+	
+	char* labelData = getFile(labels);		
+			
+	if(!labelData){
+		printf("Could not load the file, could not train the network \n");
+		return;
+	}						
+	
+	char* value = strtok(labelData,"\n");
+	int index = 0;
+	while(value){
+		float floatValue = atof(value);
+		if(floatValue-10.0f==0)
+			floatLabels[index]=0.0f;
+		else
+			floatLabels[index]=floatValue;
+		index++;
+		value=strtok(0,"\n");
+	}
+
+	//Get the current inputs now..		
+	char* digitData = getFile(digits);		
+			
+	if(!digitData){
+		printf("Could not load the file, could not train the network \n");
+		return;
+	}						
+
+	float currentRow[400];
+	int currentColumn = 0;
+	int numTestingPatterns = 0;
+	int rowNumber = 0;
+	float sums [10];
+	memset(sums,0,sizeof(float)*10);
+	int confusionMatrix[10][10];
+	memset(confusionMatrix,0,sizeof(int)*100);
+	value = strtok(digitData,",\n");	
+	while(value){
+		if(currentColumn==399){	
+			currentRow[currentColumn]=atof(value);
+			if(rowNumber%10!=0){
+				currentColumn=0;
+				value = strtok(0,",\n");
+				rowNumber++;	
+				continue;
+			}
+	
+			float outputValues [10];			
+			int x = 0;		
+			for(;x<10;x++){
+				if(((int)floatLabels[rowNumber])==x){
+					outputValues[x]=1.0f;
+				}else{
+					outputValues[x]=0.0f;
+				}
+			}
+			numTestingPatterns+=1;
+			computeOutputs(neuralNetwork,currentRow);
+			Layer* outputLayer = neuralNetwork->layers[neuralNetwork->numLayers-1];
+
+			for(x=0;x<10;x++){
+				sums[x] += (outputValues[x]-outputLayer->neurons[x]->sigma)*
+					(outputValues[x]-outputLayer->neurons[x]->sigma);
+			}
+			//Find the max value (the value that is closest to one).
+			int guessedValue = 0;
+			int actualValue =  (int)floatLabels[rowNumber];
+			float currentMax = outputLayer->neurons[0]->sigma;
+			for(x=0;x<10;x++){
+				if(outputLayer->neurons[x]->sigma>currentMax){
+					currentMax = outputLayer->neurons[x]->sigma;
+					guessedValue = x; 
+				}	
+			}				
+			confusionMatrix[actualValue][guessedValue]++;			
+
+			resetValues(neuralNetwork);
+			currentColumn=0;
+			rowNumber++;
+			value = strtok(0,",\n");
+			continue;
+		}	
+
+		currentRow[currentColumn]=atof(value);	
+		currentColumn++;
+		value = strtok(0,",\n");	
+	}
+
+	int x = 0;
+	for(;x<10;x++){
+		fprintf(output,"%i,%.6f\n",x,sqrt((1.0f/(2.0f*numTestingPatterns))*
+			sums[x]));
+	}
+
+	for(x =0;x<10;x++){
+		int y = 0;		
+		for(;y<10;y++){
+			fprintf(confusion,"%i,",confusionMatrix[x][y]);	
+		}
+		fprintf(confusion,"\n");
+	}	
+	
+	return;
+
+}
+
+
 
 /**
 * Tests the network based on a filename.
