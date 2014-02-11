@@ -40,14 +40,6 @@ int main(int argc,char** argv){
 	if(wasArgSpecified(argv,argc,"--problem3")){
 		settings.numInputs = 400;
 		settings.numOutputs = 10;
-		settings.learningRate =0.2f;
-		settings.numEpochs=100;
-		settings.numHiddenLayers=1;	
-		settings.testOutputFile="report/problem3/test.csv";
-		settings.validationOutputFile="report/problem3/confusion.csv";
-		int numNeurons[1];
-		numNeurons[0] = 50;
-		settings.numNeurons = numNeurons;	
 		//Show the user what was selected.
 		displaySettings(&settings);
 		NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
@@ -58,8 +50,7 @@ int main(int argc,char** argv){
 		}
 		FILE* file = fopen(settings.testOutputFile,"w+");
 		FILE* confusion = fopen(settings.validationOutputFile,"w+");
-		fprintf(file,"Digit,RMSE\n");
-		testNetworkHand(neuralNetwork,0,
+			testNetworkHand(neuralNetwork,0,
 			(char*)"handwritten/digits.csv",(char*)"handwritten/digit_labels.csv",
 			file,confusion);		
 		fclose(file);	
@@ -73,7 +64,6 @@ int main(int argc,char** argv){
 	NeuralNetwork* neuralNetwork = initializeNeuralNetwork(&settings);
 	int i = 0;
 	FILE* currentFile = fopen(settings.testOutputFile,"w+");
-	fprintf(currentFile,"epochNumber,RMSE\n");
 	for(;i<settings.numEpochs;i++){
 		trainNetwork(neuralNetwork,settings.learningRate,settings.trainingFile);
 		testNetwork(neuralNetwork,i,settings.testingFile,currentFile);

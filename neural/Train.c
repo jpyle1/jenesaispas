@@ -358,7 +358,7 @@ void testNetworkHand(NeuralNetwork* neuralNetwork,int epochNumber,
 
 	int x = 0;
 	for(;x<10;x++){
-		fprintf(output,"%i,%.6f\n",x,sqrt((1.0f/(2.0f*numTestingPatterns))*
+		fprintf(output,"%.6f\n",sqrt((1.0f/(2.0f*numTestingPatterns))*
 			sums[x]));
 	}
 
@@ -415,7 +415,7 @@ void testNetwork(NeuralNetwork* neuralNetwork,int epochNumber, char* fileName,
 		value=strtok(0,", \n");
 	}
 	float rms = sqrt((1.0f/(2.0f*numTestingPatterns))*sum);
-	fprintf(fileOutput,"%i,%.3f\n",epochNumber,rms);
+	fprintf(fileOutput,"%.6f\n",rms);
 	free(currentRow);
 	return;				
 }

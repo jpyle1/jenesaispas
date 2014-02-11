@@ -12,6 +12,7 @@ def main(argv):
 	testingFile = "problem"+problemNumberStr+"_testing.csv"
 	validationFile = "problem"+problemNumberStr+"_validation.csv" 
 	
+	indexFile = open("report/"+problemNumber+"/test/index.csv","w+")
 	#Repeat the experiment several times...			
 	#With different learning rates...	
 	for runNumber in range(1,10):
@@ -20,11 +21,14 @@ def main(argv):
 		for hiddenLayerCount in range(1,10):			
 			currentNumNeurons = ""	
 			#Set the values of the current hidden layer...
-			for currentLayer in range(1,hiddenLayerCount+1):				
+			for currentLayer in range(1,hiddenLayerCount+1):			
+				randNum = random.randint(1,6)	
 				if(currentLayer!=hiddenLayerCount):
-					currentNumNeurons+=str(random.randint(1,6))+","
+					currentNumNeurons+=str(randNum)+","
 				else:
-					currentNumNeurons+=str(random.randint(1,6))		
+					currentNumNeurons+=str(randNum)	
+			indexFile.write(str(runNumber)+"_"+str(hiddenLayerCount)+"_"
+				+currentNumNeurons+"\n")	
 			#Regenerate the data...		
 			subprocess.call(["bin/main.exe","--"+problemNumber])	
 			#Perform the data..	
@@ -37,6 +41,6 @@ def main(argv):
 					str(hiddenLayerCount)+".csv","--validationOutputFile",
 					"report/"+problemNumber+"/val/"+str(runNumber)+"_"+
 					str(hiddenLayerCount)+".csv"])
-
+	indexFile.close()	
 if __name__ == "__main__":
 	main(sys.argv[1:len(sys.argv)])
